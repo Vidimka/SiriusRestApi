@@ -39,7 +39,7 @@ def short_link():
     random_id = str(uuid.uuid1())[0:8]
     new_link = "http:/localhost:5000/" + random_id
     write_link(random_id, link, new_link, 0)
-    return jsonify({"status": "Created", "shortenedURL": new_link})
+    return make_response(jsonify({"status": "Created", "shortenedURL": new_link}), 201)
 
 
 @app.get("/<link_id>")
