@@ -15,7 +15,7 @@ class Link(LinksBase):
     ran_id = Column(Integer)
     recieved_link = Column(String(250), nullable=False)
     shorten_link = Column(String(250), nullable=False)
-    views = Column(Integer, nullable=False)
+    views = Column(Integer, nullable=False, default=0)
 
 
 LinksBase.metadata.create_all(engine)
