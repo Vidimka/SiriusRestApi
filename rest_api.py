@@ -33,9 +33,9 @@ def write_link(spam, eggs, foo, bar):
 
 @app.post("/shorten")
 def short_link():
-    if not request.json or 'url_to_shorten' not in request.json:
+    if not request.json or 'urlToShorten' not in request.json:
         make_response(400, "Bad request")
-    link = request.json['url_to_shorten']
+    link = request.json['urlToShorten']
     random_id = str(uuid.uuid1())[0:8]
     new_link = "http:/localhost:5000/" + random_id
     write_link(random_id, link, new_link, 0)
