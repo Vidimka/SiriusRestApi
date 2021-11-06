@@ -57,11 +57,10 @@ def get_full_link(link_id):
 
 @app.get("/<link_id>/views")
 def get_views(link_id):
-    if len(link_id) == 0:
-        return make_response("Not Found", 404)
     link_data = session.query(Link).filter_by(ran_id=link_id).first()
-    if link_data is not None:
-        return jsonify({"viewCount": link_data.views})
+    if link_data is None:
+        return make_response("Not Found", 404)
+    return make_response(jsonify({"viewCount": link_data.views}), 200)
 
 
 if __name__ == '__main__':
