@@ -34,7 +34,7 @@ def write_link(spam, eggs, foo, bar):
 @app.post("/shorten")
 def short_link():
     if not request.json or 'urlToShorten' not in request.json:
-        make_response(400, "Bad request")
+        return make_response("Bad request", 400)
     link = request.json['urlToShorten']
     random_id = str(uuid.uuid1())[0:8]
     new_link = "http:/localhost:5000/" + random_id
@@ -44,23 +44,24 @@ def short_link():
 
 @app.get("/<link_id>")
 def get_full_link(link_id):
-    if len(link_id) == 0:
-        make_response(404, "Not Found")
-    filt = session.query(Link).filter_by(ran_id=link_id).first()
-    if filt is not None:
-        filt.views += 1
-        session.commit()
-        return redirect(filt.recieved_link, 301)
-    return jsonify({"redirectTo": filt.recieved_link})
+    link_data = session.query(Link).filter_by(ran_id=link_id).first()
+    if link_data is None:
+        return make_response("Not Found", 404)
+    link_data.views += 1
+    session.commit()
+    resp = make_response(link_data.recieved_link, 301)
+    resp.headers["Location"] = link_data.recieved_link
+    return resp
+
 
 
 @app.get("/<link_id>/views")
 def get_views(link_id):
     if len(link_id) == 0:
-        make_response(404, "Not Found")
-    filt2 = session.query(Link).filter_by(ran_id=link_id).first()
-    if filt2 is not None:
-        return jsonify({"viewCount": filt2.views})
+        return make_response("Not Found", 404)
+    link_data = session.query(Link).filter_by(ran_id=link_id).first()
+    if link_data is not None:
+        return jsonify({"viewCount": link_data.views})
 
 
 if __name__ == '__main__':
